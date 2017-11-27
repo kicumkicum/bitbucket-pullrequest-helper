@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+
+  "name": "Bitbucket PR helper",
+  "description": "Help for reviewer",
+  "version": "0.0.0",
+
+  "browser_action": {
+    "default_popup": "lib/popup.html"
+  },
+  "permissions": [
+    "activeTab",
+    "https://bitbucket.org/jiralion/ert-stb/pull-requests/"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://bitbucket.org/jiralion/ert-stb/pull-requests/",
+        "https://bitbucket.org/jiralion/ert-stb/pull-requests/?state=OPEN"
+      ],
+      "js": ["lib/bundle.js"]
+    }
+  ]
+}
