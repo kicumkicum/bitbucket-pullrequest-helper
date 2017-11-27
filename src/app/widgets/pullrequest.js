@@ -1,14 +1,28 @@
-export default class Pullrequst {
+export default class Pullrequest {
 	/**
 	 * @param {HTMLTableRowElement} node
 	 */
 	constructor(node) {
+		/**
+		 * @type {HTMLTableRowElement}
+		 * @private
+		 */
 		this._node = node;
+		/**
+		 * @type {string}
+		 */
 		this.title = this._parseTitle(node);
 	}
 
-	hide() {
-		this._node.hidden = true;
+	/**
+	 * @param {boolean} isVisible
+	 */
+	setVisible(isVisible) {
+		if (isVisible === this._node.hidden) {
+			return;
+		}
+
+		this._node.hidden = isVisible;
 	}
 
 	/**
