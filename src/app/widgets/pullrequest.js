@@ -15,14 +15,11 @@ export default class Pullrequest {
 	}
 
 	/**
-	 * @param {boolean} isVisible
+	 * @param {string} prop
+	 * @param {*} value
 	 */
-	setVisible(isVisible) {
-		if (isVisible === this._node.hidden) {
-			return;
-		}
-
-		this._node.hidden = isVisible;
+	setNodePropValue(prop, value) {
+		this._node[prop] = value;
 	}
 
 	/**

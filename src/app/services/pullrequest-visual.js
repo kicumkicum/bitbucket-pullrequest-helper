@@ -6,6 +6,6 @@ export default class PullrequestVisual {
 	 * @param {boolean} isVisible
 	 */
 	setPullrequestVisible(pullrequest, isVisible) {
-		pullrequest.setVisible(isVisible);
+		pullrequest.setNodePropValue('hidden', !isVisible);
 	}
 }
