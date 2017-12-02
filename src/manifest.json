@@ -6,7 +6,7 @@
   "version": "0.0.0",
 
   "browser_action": {
-    "default_popup": "lib/popup.html"
+    "default_popup": "./popup.html"
   },
   "permissions": [
     "activeTab",
@@ -18,7 +18,7 @@
         "https://bitbucket.org/jiralion/ert-stb/pull-requests/",
         "https://bitbucket.org/jiralion/ert-stb/pull-requests/?state=OPEN"
       ],
-      "js": ["lib/bundle.js"]
+      "js": ["./bundle.js"]
     }
   ]
 }
