@@ -12,6 +12,11 @@ export default class Pullrequest {
 		 * @type {string}
 		 */
 		this.title = this._parseTitle(node);
+
+		/**
+		 * @type {string}
+		 */
+		this.id = this._node.getAttribute('data-pull-request-id');
 	}
 
 	/**
