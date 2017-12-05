@@ -50,7 +50,7 @@ export default class PullrequestSorter {
 			this._pullrequestList.insertBefore(this._dragEndedPullrequest, pullrequest);
 			this._dragEndedPullrequest = null;
 
-			// this._savePullrequestList(this._pullrequestList);
+			this._savePullrequestList(this._pullrequestList);
 		});
 		pullrequest.setNodePropValue('ondragend', () => {
 			this._dragEndedPullrequest = pullrequest;
@@ -69,7 +69,7 @@ export default class PullrequestSorter {
 	 * @private
 	 */
 	_restorePullrequestList() {
-		const pullrequestList = this._storage.getItem('sorter:pullrequest-list').split(',');
-		pullrequestList.setOrder(pullrequestList);
+		const pullrequestIds = this._storage.getItem('sorter:pullrequest-list').split(',');
+		this._pullrequestList.setOrder(pullrequestIds);
 	}
 }

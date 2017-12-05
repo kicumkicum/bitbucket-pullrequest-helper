@@ -42,8 +42,7 @@ export default class PullrequestList {
 			return false;
 		}
 
-		const oldPosition = this._pullrequestMap.indexOf(pullrequest);
-		const result = this._pullrequestMap.move(oldPosition, newPosition);
+		const result = this._pullrequestMap.move(pullrequest, newPosition);
 
 		if (!result) {
 			return false;
@@ -52,6 +51,20 @@ export default class PullrequestList {
 		this._node.insertBefore(currentPullrequestNode, newPullrequestPair.node);
 	}
 
+	/**
+	 * @param {Array<string>} ids
+	 */
+	setOrder(ids) {
+		ids.forEach((id, index) => {
+			const pair = this._pullrequestMap.getPairs().find((pair) => pair.pullrequest.id === id);
+			this.move(pair.pullrequest, index);
+		});
+	}
+
+	/**
+	 * @param {Pullrequest} p1
+	 * @param {Pullrequest} p2
+	 */
 	insertBefore(p1, p2) {
 		const i = this._pullrequestMap.indexOf(p2);
 		this.move(p1, i);

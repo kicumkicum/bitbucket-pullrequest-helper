@@ -21,19 +21,20 @@ export default class PullrequestMap {
 	}
 
 	/**
-	 * @param {number} oldPosition
+	 * @param {Pullrequest} pullrequest
 	 * @param {number} newPosition
 	 * @return {boolean}
 	 */
-	move(oldPosition, newPosition) {
+	move(pullrequest, newPosition) {
+		const oldPosition = this.indexOf(pullrequest);
 		const length = this._pullrequestPair.length;
-		if (newPosition >= length || oldPosition >= length) {
+		if (newPosition >= length || oldPosition === -1) {
 			return false;
 		}
 
 		const movedPair = this._pullrequestPair.splice(oldPosition, 1)[0];
 		let factor = 0;
-		if (newPosition >= oldPosition) {
+		if (newPosition > oldPosition) {
 			factor = 1;
 		}
 
