@@ -1,5 +1,5 @@
 import Pullrequest from './pullrequest';
-
+import PullrequestMap from '../services/pullrequest-map';
 
 export default class PullrequestList {
 	/**
@@ -12,26 +12,16 @@ export default class PullrequestList {
 		 */
 		this._node = node;
 
-		/**
-		 * @type {Array<HTMLTableRowElement>}
-		 * @private
-		 */
-		this._nodes = [];
+		const pairs = this._parsePullrequests(node);
 
-		/**
-		 * @type {Array<Pullrequest>}
-		 * @private
-		 */
-		this._pullrequests = [];
-
-		this._parsePullrequests(node);
+		this._pullrequestMap = new PullrequestMap(pairs);
 	}
 
 	/**
 	 * @return {Array<Pullrequest>}
 	 */
 	getItems() {
-		return this._pullrequests;
+		return this._pullrequestMap.getPairs().map((pair) => pair.pullrequest);
 	}
 
 	/**
@@ -40,18 +30,30 @@ export default class PullrequestList {
 	 * @return {boolean}
 	 */
 	move(pullrequest, newPosition) {
-		const currentIndex = this._pullrequests.indexOf(pullrequest);
-		if (currentIndex === -1) {
+		const pair = this._pullrequestMap.find(pullrequest);
+		if (!pair) {
 			return false;
 		}
 
-		const currentPullrequestNode = this._nodes[currentIndex];
-		const newPullrequestNode = this._nodes[newPosition];
-		this._node.insertBefore(currentPullrequestNode, newPullrequestNode);
+		const currentPullrequestNode = pair.node;
+		const newPullrequestPair = this._pullrequestMap.item(newPosition);
+
+		if (!newPullrequestPair) {
+			return false;
+		}
+
+		const oldPosition = this._pullrequestMap.indexOf(pullrequest);
+		const result = this._pullrequestMap.move(oldPosition, newPosition);
+
+		if (!result) {
+			return false;
+		}
+
+		this._node.insertBefore(currentPullrequestNode, newPullrequestPair.node);
 	}
 
 	insertBefore(p1, p2) {
-		const i = this._pullrequests.indexOf(p2);
+		const i = this._pullrequestMap.indexOf(p2);
 		this.move(p1, i);
 	}
 
@@ -64,17 +66,20 @@ export default class PullrequestList {
 		try {
 			const nodes = node.getElementsByClassName('pull-request-row');
 			const list = Array.prototype.slice.call(nodes);
-			list.forEach((pullrequestNode, index) => {
-				this._nodes[index] = pullrequestNode;
+			return list.map((pullrequestNode) => {
 				const pullrequest = new Pullrequest(pullrequestNode);
-
-				this._pullrequests[index] = pullrequest;
 
 				pullrequest.setNodePropValue('onmouseover', () => pullrequestNode.classList.add('focused'));
 				pullrequest.setNodePropValue('onmouseout', () => pullrequestNode.classList.remove('focused'));
+
+				return {
+					pullrequest: pullrequest,
+					node: pullrequestNode
+				};
 			});
 		} catch (e) {
 			console.error('PR list not parsed');
+			return [];
 		}
 	}
 }

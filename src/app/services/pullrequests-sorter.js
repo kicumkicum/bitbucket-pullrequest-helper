@@ -1,11 +1,13 @@
 import Pullrequest from '../widgets/pullrequest';
 import PullrequestList from '../widgets/pullrequest-list';
+import Storage from './storage';
 
 export default class PullrequestSorter {
 	/**
 	 * @param {PullrequestList} pullrequestList
+	 * @param {Storage} storage
 	 */
-	constructor(pullrequestList) {
+	constructor(pullrequestList, storage) {
 		/**
 		 * @type {PullrequestList}
 		 * @private
@@ -13,10 +15,22 @@ export default class PullrequestSorter {
 		this._pullrequestList = pullrequestList;
 
 		/**
+		 * @type {Storage}
+		 * @private
+		 */
+		this._storage = storage;
+
+		/**
 		 * @type {?Pullrequest}
 		 * @private
 		 */
 		this._dragEndedPullrequest = null;
+
+		try {
+			this._restorePullrequestList();
+		} catch (e) {
+			console.error(e);
+		}
 
 		const pullrequestItems = this._pullrequestList.getItems();
 		pullrequestItems.forEach((pullrequest) => this._initPullrequest(pullrequest));
@@ -35,9 +49,27 @@ export default class PullrequestSorter {
 
 			this._pullrequestList.insertBefore(this._dragEndedPullrequest, pullrequest);
 			this._dragEndedPullrequest = null;
+
+			// this._savePullrequestList(this._pullrequestList);
 		});
 		pullrequest.setNodePropValue('ondragend', () => {
 			this._dragEndedPullrequest = pullrequest;
 		});
+	}
+
+	_savePullrequestList(pullrequestList) {
+		const pullrequestIds = pullrequestList
+			.getItems()
+			.map((pullrequest) => pullrequest.id);
+		this._storage.setItem('sorter:pullrequest-list', pullrequestIds.join(','));
+	}
+
+	/**
+	 * @throws {Error}
+	 * @private
+	 */
+	_restorePullrequestList() {
+		const pullrequestList = this._storage.getItem('sorter:pullrequest-list').split(',');
+		pullrequestList.setOrder(pullrequestList);
 	}
 }
